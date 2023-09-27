@@ -87,7 +87,7 @@ cov_m = cov_matrix;
 betas = [0.9 0.95 0.99];
 [VaR,CVaR] = VaR_CVaR(betas, opt_returns, opt_var);
 
-min_var_results = table(betas',VaR,CVaR, 'VariableNames', {'\beta', 'VaR', 'CVaR'});
+min_var_results = table(betas',VaR,CVaR, 'VariableNames', {'betas', 'VaR', 'CVaR'});
 
 
 %% 4: Approach 2: Minimum CVaR approach
@@ -107,15 +107,15 @@ for i = betas
 end
 
 %Calculating VaR and CVaR diff
-results = array2table(results, 'VariableNames', {'beta_risk','sample_size','SP500','GovBond','SmallCap','value_at_risk','c_value_at_risk','iters','time'});
-result_table = join(results, min_var_results, 'keys', 'beta_risk');
+results = array2table(results, 'VariableNames', {'betas','sample_size','SP500','GovBond','SmallCap','value_at_risk','c_value_at_risk','iters','time'});
+result_table = join(results, min_var_results, 'keys', 'betas');
 
 result_table.('VaR diff. %') = ((result_table.('VaR') - result_table.('value_at_risk'))./result_table.('value_at_risk'))*100;
 result_table.('CVaR diff. %') = ((result_table.('CVaR') - result_table.('c_value_at_risk'))./result_table.('c_value_at_risk'))*100;
 
 % Create table
 column_names = {'Beta', 'Sample Size', 'SP500', 'GovBond', 'SmallCap', 'VaR', 'VaR diff. (%)', 'CVaR', 'CVaR diff. (%)','Iterations', 'Time'};
-table5 = table(result_table.('beta_risk'), result_table.('sample_size'), result_table.('SP500'), result_table.('GovBond'), ...
+table5 = table(result_table.('betas'), result_table.('sample_size'), result_table.('SP500'), result_table.('GovBond'), ...
     result_table.('SmallCap'), result_table.('value_at_risk'), result_table.('VaR diff. %'), result_table.('c_value_at_risk'), ...
     result_table.('CVaR diff. %'),result_table.('iters'),result_table.('time'), 'VariableNames', column_names);
             
